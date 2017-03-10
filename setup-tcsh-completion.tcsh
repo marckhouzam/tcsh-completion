@@ -43,10 +43,16 @@ unset __tcsh_completion_version
 
 set __tcsh_completion_file = /tmp/.tcsh_completion
 echo > ${__tcsh_completion_file}
+
 foreach __tcsh_completion_bash_script (/usr/share/bash-completion/completions/*)
 	./setup-tcsh-completion.bash ${__tcsh_completion_bash_script} >> ${__tcsh_completion_file}
 end
+
+# Don't include those more basic completions until the tcsh handling is more robust
+#./setup-tcsh-completion.bash /usr/share/bash-completion/bash_completion >> ${__tcsh_completion_file}
+
 source ${__tcsh_completion_file}
 \rm ${__tcsh_completion_file}
 unset __tcsh_completion_file
+
 unset __tcsh_completion_bash_script
