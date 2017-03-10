@@ -7,9 +7,11 @@
 #  e.g.
 #  complete git 'p,*,`bash tcsh_completion.bash git /usr/share/bash-completion/completions/git "${COMMAND_LINE}"`,'
 
+bashCompletionScript=/usr/share/bash-completion/bash_completion
+
 # Allow for debug printouts when running the script by hand
 if [ "$1" == "-d" ] || [ "$1" == "--debug" ]; then
-    __tcsh_completion_debug=true
+    debug=true
     shift
 fi
 
@@ -17,14 +19,14 @@ tool=$1
 toolScript=$2
 commandToComplete=$3
 
-if [ "${__tcsh_completion_debug}" == "true" ]; then
+if [ "${debug}" == "true" ]; then
     echo =====================================
     echo tcsh-completion.bash called for $tool using $toolScript 
     echo with command to complete: $commandToComplete
 fi
 
-if [ -e /usr/share/bash-completion/bash_completion ]; then
-	source /usr/share/bash-completion/bash_completion
+if [ -e ${bashCompletionScript} ]; then
+	source ${bashCompletionScript}
 fi
 source ${toolScript}
 
@@ -61,7 +63,7 @@ fi
 # Call the completion command in the real bash script
 ${tool}
 
-if [ "${__tcsh_completion_debug}" == "true" ]; then
+if [ "${debug}" == "true" ]; then
     echo =====================================
     echo tcsh-completion.bash returned:
     echo "${COMPREPLY[@]}"
@@ -92,7 +94,7 @@ if [ ${#COMPREPLY[*]} -eq 0 ]; then
 	fi
 fi
 
-if [ "${__tcsh_completion_debug}" == "true" ]; then
+if [ "${debug}" == "true" ]; then
     echo =====================================
     echo Completions including tcsh additions:
     echo "${COMPREPLY[@]}"
