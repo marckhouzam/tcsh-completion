@@ -31,28 +31,48 @@
 #     source <thisFile>
 # to your .tcshrc or .cshrc file
 
-set __tcsh_completion_version = `\echo ${tcsh} | \sed 's/\./ /g'`
-if ( ${__tcsh_completion_version[1]} < 6 || \
-     ( ${__tcsh_completion_version[1]} == 6 && \
-       ${__tcsh_completion_version[2]} < 16 ) ) then
-	unset __tcsh_completion_version
-	echo "tcsh-completion.tcsh: Your version of tcsh is too old, you need version 6.16.00 or newer.  Enhanced tcsh completion will not work."
-	exit
+# Check that tcsh is modern enough for completion
+set __tcsh_version = `\echo ${tcsh} | \sed 's/\./ /g'`
+if ( ${__tcsh_version[1]} < 6 || \
+     ( ${__tcsh_version[1]} == 6 && \
+       ${__tcsh_version[2]} < 16 ) ) then
+  unset __tcsh_version
+  echo "tcsh-completion.tcsh: Your version of tcsh is too old, you need version 6.16.00 or newer.  Enhanced tcsh completion will not work."
+  exit
 endif
-unset __tcsh_completion_version
+unset __tcsh_version
 
-set __tcsh_completion_file = /tmp/.tcsh_completion
-echo > ${__tcsh_completion_file}
 
-foreach __tcsh_completion_bash_script (/usr/share/bash-completion/completions/*)
-	bash ${HOME}/git/tcsh-completion/setup-tcsh-complete-commands.bash ${__tcsh_completion_bash_script} >> ${__tcsh_completion_file}
+# Go over each bash completion script and generate a corresponding tcsh script
+# and 'complete' command.
+foreach __bash_script ( \
+    /usr/share/bash-completion/completions/* \
+# Don't include those more basic completions until the tcsh handling is more robust\
+#    /usr/share/bash-completion/bash_completion \
+  )
+  set __command_name = `basename ${__bash_script}`
+  set __tcsh_script = ${HOME}/git/tcsh-completion/completions/${__command_name}
+
+  complete ${__command_name} 'p,*,`bash ${__tcsh_script} "${COMMAND_LINE}"`,'
+
+  \mkdir -p ${HOME}/git/tcsh-completion/completions
+
+  cat << EOF > ${__tcsh_script}
+#!bash
+#
+# This script is GENERATED and will be overwritten automatically.
+# Do not modify it directly.
+#
+# This script will replace itself with another script which can
+# properly perform completion.
+
+# Remove ourselves
+\rm \$0
+# Generate the new script
+bash \${HOME}/git/tcsh-completion/setup-tcsh-completion.bash \`basename \$0\` > \$0
+
+EOF
 end
-
-# Don't include those more basic completions until the tcsh handling is more robust
-#bash ${HOME}/git/tcsh-completion/setup-tcsh-complete-commands.bash /usr/share/bash-completion/bash_completion >> ${__tcsh_completion_file}
-
-source ${__tcsh_completion_file}
-\rm ${__tcsh_completion_file}
-unset __tcsh_completion_file
-
-unset __tcsh_completion_bash_script
+unset __bash_script
+unset __command_name
+unset __tcsh_script
