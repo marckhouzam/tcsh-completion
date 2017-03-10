@@ -41,13 +41,9 @@ if ( ${__tcsh_completion_version[1]} < 6 || \
 endif
 unset __tcsh_completion_version
 
-# For Ubuntu
-#set echo
-echo > /tmp/.tcsh_completion
-foreach __tcsh_completion_tool_script (/usr/share/bash-completion/completions/*)
-	./setup-tcsh-completion.bash ${__tcsh_completion_tool_script} >> /tmp/.tcsh_completion
-end
-unset __tcsh_completion_tool_script
-
-source /tmp/.tcsh_completion
-\rm /tmp/.tcsh_completion
+set __tcsh_completion_file = /tmp/.tcsh_completion
+echo > ${__tcsh_completion_file}
+./setup-tcsh-completion.bash ${__tcsh_completion_file}
+source ${__tcsh_completion_file}
+\rm ${__tcsh_completion_file}
+unset __tcsh_completion_file

@@ -15,33 +15,35 @@
 #   git __git_wrap__git_main
 #
 
-completionScript=$1
-# Remove any existing complete commands
-complete -r
-# Source the script to generate the complete command(s)
-source ${completionScript}
-# Reach each complete command generated which is of the -F format
-complete | egrep -e '-F' | while read completionCommand
+for completionScript in /usr/share/bash-completion/completions/*
 do
-	# Remove everything up to the last space to find the command name
-	# e.g. complete -o bashdefault -o default -o nospace -F __git_wrap__gitk_main gitk
-	#  becomes
-	#      gitk
-	commandName=${completionCommand##* }
+	# Remove any existing complete commands
+	complete -r
+	# Source the script to generate the complete command(s)
+	source ${completionScript}
+	# Reach each complete command generated which is of the -F format
+	complete | egrep -e '-F' | while read completionCommand
+	do
+		# Remove everything up to the last space to find the command name
+		# e.g. complete -o bashdefault -o default -o nospace -F __git_wrap__gitk_main gitk
+		#  becomes
+		#      gitk
+		commandName=${completionCommand##* }
+	
+		# Remove everything up to and including "-F "
+		# e.g. complete -o bashdefault -o default -o nospace -F __git_wrap__gitk_main gitk
+		#  becomes
+		#      __git_wrap__gitk_main gitk
+		tmp=${completionCommand##*-F }
+		# Remove everyting after the first space
+		# e.g. __git_wrap__gitk_main gitk
+		#  becomes
+		#  __git_wrap__gitk_main
+		# Note that we cannot simply use the output in $tmp to
+		# express both strings we are looking for as there could
+		# be other parameters included in $tmp
+		commandFunction=${tmp%% *}
 
-	# Remove everything up to and including "-F "
-	# e.g. complete -o bashdefault -o default -o nospace -F __git_wrap__gitk_main gitk
-	#  becomes
-	#      __git_wrap__gitk_main gitk
-	tmp=${completionCommand##*-F }
-	# Remove everyting after the first space
-	# e.g. __git_wrap__gitk_main gitk
-	#  becomes
-	#  __git_wrap__gitk_main
-	# Note that we cannot simply use the output in $tmp to
-	# express both strings we are looking for as there could
-	# be other parameters included in $tmp
-	commandFunction=${tmp%% *}
-
-	echo complete ${commandName} \'p,\*,\`bash\ ${HOME}/.tcsh-completion.bash\ ${commandFunction}\ ${completionScript}\ \"\$\{COMMAND_LINE\}\"\`,\'
+		echo complete ${commandName} \'p,\*,\`bash\ ${HOME}/.tcsh-completion.bash\ ${commandFunction}\ ${completionScript}\ \"\$\{COMMAND_LINE\}\"\`,\' >> $1
+	done
 done
