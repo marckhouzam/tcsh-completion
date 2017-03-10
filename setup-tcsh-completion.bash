@@ -16,12 +16,13 @@
 #
 
 if [ $# -ne 1 ]; then
-	echo "Usage: $0 <completionScript>"
-	echo "where <completionScript> is the full path of the bash completion script that will feed the tcsh completion"
+	echo "Usage: $0 <toolName>"
+	echo "where <toolName> "
 	exit
 fi
 
-toolCompletionScript=$1
+toolName=${1}
+toolCompletionScript=/usr/share/bash-completion/completions/${toolName}
 
 # It does not look like the main bash completion script is necessary
 # to generate the 'complete' commands we are interested in.
@@ -42,7 +43,7 @@ complete -r
 source ${toolCompletionScript} &> /dev/null
 
 # Read each complete command generated as long as uses the -F format
-complete | egrep -e '-F' | while read completionCommand
+complete | egrep -e '-F' | egrep -e ${toolName}'$' | while read completionCommand
 do
 	# Remove everything up to the last space to find the command name
 	# e.g. complete -o bashdefault -o default -o nospace -F __git_wrap__gitk_main gitk
@@ -64,5 +65,6 @@ do
 	# be other parameters included in $tmp
 	commandFunction=${tmp%% *}
 
-	echo complete ${commandName} \'p,\*,\`bash\ ${HOME}/.tcsh-completion.bash\ ${commandFunction}\ ${toolCompletionScript}\ \"\$\{COMMAND_LINE\}\"\`,\'
+	echo '#!/bin/bash'
+	echo bash ${HOME}/.tcsh-completion.bash\ ${commandFunction}\ ${toolCompletionScript}\ \"\$\{1\}\"
 done
