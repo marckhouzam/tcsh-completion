@@ -1,7 +1,7 @@
 # tcsh completion support for core Git.
 #
-# Copyright (C) 2012 Marc Khouzam <marc.khouzam@gmail.com>
-# Distributed under the GNU General Public License, version 2.0.
+# Copyright (C) 2017 Marc Khouzam <marc.khouzam@gmail.com>
+# Distributed under the MIT License (MIT)
 #
 # When sourced, this script will generate a new script that uses
 # the git-completion.bash script provided by core Git.  This new
@@ -43,22 +43,11 @@ unset __tcsh_completion_version
 
 # For Ubuntu
 #set echo
+echo > /tmp/.tcsh_completion
 foreach __tcsh_completion_tool_script (/usr/share/bash-completion/completions/*)
-	set __tcsh_completion_tool = `basename ${__tcsh_completion_tool_script}`
-	set __tcsh_completion_bash_complete = \
-	    `bash -ic "complete -r && source ${__tcsh_completion_tool_script} && complete | egrep -e '-F' | grep ${__tcsh_completion_tool}"'$'`
-	set __tcsh_completion_found = 0
-	foreach __tcsh_completion_iterator (${__tcsh_completion_bash_complete})
-		if ( ${__tcsh_completion_found} == 1 ) then
-			set __tcsh_completion_bash_function = ${__tcsh_completion_iterator}
-			break
-		endif
-		if ( "${__tcsh_completion_iterator}" == "-F" ) then
-		    set __tcsh_completion_found = 1
-		endif
-	end
-
-	complete ${__tcsh_completion_tool} p,\*,\`bash\ ${HOME}/.tcsh-completion.bash\ ${__tcsh_completion_bash_function}\ ${__tcsh_completion_tool_script}\ \"\$\{COMMAND_LINE\}\"\`,
+	./setup-tcsh-completion.bash ${__tcsh_completion_tool_script} >> /tmp/.tcsh_completion
 end
 unset __tcsh_completion_tool_script
-unset __tcsh_completion_tool
+
+source /tmp/.tcsh_completion
+\rm /tmp/.tcsh_completion

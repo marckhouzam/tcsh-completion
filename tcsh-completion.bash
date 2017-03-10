@@ -1,5 +1,8 @@
 #!bash
 #
+# Copyright (C) 2017 Marc Khouzam <marc.khouzam@gmail.com>
+# Distributed under the MIT License (MIT)
+#
 # Script to be called by the tcsh complete command.
 # It should be called by setting up such complete command in the tcsh shell like this:
 #
