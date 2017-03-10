@@ -31,13 +31,15 @@
 #     source <thisFile>
 # to your .tcshrc or .cshrc file
 
+set __script_location = ${HOME}/git/tcsh-completion/completions
+
 # Check that tcsh is modern enough for completion
 set __tcsh_version = `\echo ${tcsh} | \sed 's/\./ /g'`
 if ( ${__tcsh_version[1]} < 6 || \
      ( ${__tcsh_version[1]} == 6 && \
        ${__tcsh_version[2]} < 16 ) ) then
   unset __tcsh_version
-  echo "tcsh-completion.tcsh: Your version of tcsh is too old, you need version 6.16.00 or newer.  Enhanced tcsh completion will not work."
+  echo "ERROR: Your version of tcsh is too old, you need version 6.16.00 or newer.  Enhanced tcsh completion will not work."
   exit
 endif
 unset __tcsh_version
@@ -45,17 +47,17 @@ unset __tcsh_version
 
 # Go over each bash completion script and generate a corresponding tcsh script
 # and 'complete' command.
+\mkdir -p ${__script_location}
 foreach __bash_script ( \
     /usr/share/bash-completion/completions/* \
 # Don't include those more basic completions until the tcsh handling is more robust\
 #    /usr/share/bash-completion/bash_completion \
   )
   set __command_name = `basename ${__bash_script}`
-  set __tcsh_script = ${HOME}/git/tcsh-completion/completions/${__command_name}
+  set __tcsh_script = ${__script_location}/${__command_name}
 
-  complete ${__command_name} 'p,*,`bash ${__tcsh_script} "${COMMAND_LINE}"`,'
+  complete ${__command_name} p,\*,\`bash\ ${__tcsh_script}\ '"${COMMAND_LINE}"'\`,
 
-  \mkdir -p ${HOME}/git/tcsh-completion/completions
 
   cat << EOF > ${__tcsh_script}
 #!bash
@@ -76,3 +78,4 @@ end
 unset __bash_script
 unset __command_name
 unset __tcsh_script
+unset __tcsh_script_location
