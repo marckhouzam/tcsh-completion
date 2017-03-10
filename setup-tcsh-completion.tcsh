@@ -45,7 +45,7 @@ set __tcsh_completion_file = /tmp/.tcsh_completion
 echo > ${__tcsh_completion_file}
 
 foreach __tcsh_completion_bash_script (/usr/share/bash-completion/completions/*)
-	./setup-tcsh-complete-commands.bash ${__tcsh_completion_bash_script} >> ${__tcsh_completion_file}
+	${HOME}/git/tcsh-completion/setup-tcsh-complete-commands.bash ${__tcsh_completion_bash_script} >> ${__tcsh_completion_file}
 end
 
 # Don't include those more basic completions until the tcsh handling is more robust
