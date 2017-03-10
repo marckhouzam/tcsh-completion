@@ -27,7 +27,7 @@ cat << EOF > ${tcshCompletionScript}
 # Remove ourselves
 \rm \$0
 # Generate the new script
-\${HOME}/git/tcsh-completion/setup-tcsh-completion.bash \`basename \$0\` > \$0
+bash \${HOME}/git/tcsh-completion/setup-tcsh-completion.bash \`basename \$0\` > \$0
 
 EOF
 

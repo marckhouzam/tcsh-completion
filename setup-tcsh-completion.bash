@@ -1,4 +1,4 @@
-#!/bin/bash -i
+#!bash -i
 #
 # Copyright (C) 2017 Marc Khouzam <marc.khouzam@gmail.com>
 # Distributed under the MIT License (MIT)
@@ -65,6 +65,17 @@ do
 	# be other parameters included in $tmp
 	commandFunction=${tmp%% *}
 
-	echo '#!/bin/bash'
-	echo bash ${HOME}/.tcsh-completion.bash\ ${commandFunction}\ ${toolCompletionScript}\ \"\$\{1\}\"
+cat << EOF
+#!bash
+#
+# This script is GENERATED and will be overwritten automatically.
+# Do not modify it directly.
+#
+# This script will call the tcsh completion script with the correct parameters
+# for the tool this script services.
+
+bash \${HOME}/.tcsh-completion.bash ${commandFunction} ${toolCompletionScript} "\${1}"
+
+EOF
+
 done
