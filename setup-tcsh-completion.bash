@@ -21,7 +21,16 @@ if [ $# -ne 1 ]; then
 	exit
 fi
 
-bashCompletionScript=$1
+toolCompletionScript=$1
+
+# It does not look like the main bash completion script is necessary
+# to generate the 'complete' commands we are interested in.
+# So let's avoid to source it to save time
+#
+#bashCompletionScript=/usr/share/bash-completion/bash_completion
+#if [ -e ${bashCompletionScript} ]; then
+#	source ${bashCompletionScript}
+#fi
 
 # Remove any existing complete commands
 complete -r
@@ -30,7 +39,7 @@ complete -r
 # Note that for some of the scripts we may handle to properly be sourced,
 # we need to run the bash shell in interactive mode; this explains why
 # we must use the '-i' flag at the top of the file.
-source ${bashCompletionScript}
+source ${toolCompletionScript} &> /dev/null
 
 # Read each complete command generated as long as uses the -F format
 complete | egrep -e '-F' | while read completionCommand
@@ -55,5 +64,5 @@ do
 	# be other parameters included in $tmp
 	commandFunction=${tmp%% *}
 
-	echo complete ${commandName} \'p,\*,\`bash\ ${HOME}/.tcsh-completion.bash\ ${commandFunction}\ ${bashCompletionScript}\ \"\$\{COMMAND_LINE\}\"\`,\'
+	echo complete ${commandName} \'p,\*,\`bash\ ${HOME}/.tcsh-completion.bash\ ${commandFunction}\ ${toolCompletionScript}\ \"\$\{COMMAND_LINE\}\"\`,\'
 done
