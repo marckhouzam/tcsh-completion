@@ -4,12 +4,14 @@
 # Distributed under the MIT License (MIT)
 #
 # Script to be called by the tcsh complete command.
-# It should be called by setting up such complete command in the tcsh shell like this:
+# It should be called by setting up a complete command in the tcsh shell like this:
 #
-#  complete <toolName> 'p,*,`bash tcsh_completion.bash <toolName> <toolBashCompletionScript> "${COMMAND_LINE}"`,'
+#  complete <toolName> 'p,*,`bash tcsh_completion.bash <completionFunction> <completionScript> "${COMMAND_LINE}"`,'
 #  e.g.
-#  complete git 'p,*,`bash tcsh_completion.bash git /usr/share/bash-completion/completions/git "${COMMAND_LINE}"`,'
+#  complete git 'p,*,`bash tcsh_completion.bash __git_wrap__git_main /usr/share/bash-completion/completions/git "${COMMAND_LINE}"`,'
 
+# Base bash completion script which provides some functions
+# that other completions script sometimes use
 bashCompletionScript=/usr/share/bash-completion/bash_completion
 
 # Allow for debug printouts when running the script by hand
@@ -18,13 +20,13 @@ if [ "$1" == "-d" ] || [ "$1" == "--debug" ]; then
     shift
 fi
 
-tool=$1
-toolScript=$2
+completionFunction=$1
+completionScript=$2
 commandToComplete=$3
 
 if [ "${debug}" == "true" ]; then
     echo =====================================
-    echo tcsh-completion.bash called for $tool using $toolScript 
+    echo $0 called towards $completionFunction from $completionScript 
     echo with command to complete: $commandToComplete
 fi
 
@@ -32,8 +34,8 @@ if [ -e ${bashCompletionScript} ]; then
 	source ${bashCompletionScript}
 fi
 
-if [ -e ${toolScript} ]; then
-	source ${toolScript}
+if [ -e ${completionScript} ]; then
+	source ${completionScript}
 fi
 
 # Remove the colon as a completion separator because tcsh cannot handle it
@@ -67,11 +69,11 @@ else
 fi
 
 # Call the completion command in the real bash script
-${tool}
+${completionFunction}
 
 if [ "${debug}" == "true" ]; then
     echo =====================================
-    echo tcsh-completion.bash returned:
+    echo $0 returned:
     echo "${COMPREPLY[@]}"
 fi
 
@@ -88,7 +90,10 @@ if [ ${#COMPREPLY[*]} -eq 0 ]; then
 	#     - Completions with ~ as the first character are not handled.
 
 	# No file completion should be done unless we are completing beyond
-	# the git sub-command.  An improvement on the bash completion :)
+	# the first sub-command.
+    # WARNING: This seems like a good idea for the commands I have been
+    #          using, however, I may have not noticed issues with other
+    #          commands.
 	if [ ${COMP_CWORD} -gt 1 ]; then
 		TO_COMPLETE="${COMP_WORDS[${COMP_CWORD}]}"
 
