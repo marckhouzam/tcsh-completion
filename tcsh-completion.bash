@@ -30,6 +30,10 @@ if [ "${debug}" == "true" ]; then
     echo with command to complete: $commandToComplete
 fi
 
+# I've seen that source this and doing completion with git
+# will generate many more invalid completions than without sourcing
+# this file.  But those invalid completions are discarded by the
+# shell, so I haven't yet found a problem.
 if [ -e ${bashCompletionScript} ]; then
 	source ${bashCompletionScript}
 fi
