@@ -31,7 +31,10 @@ fi
 if [ -e ${bashCompletionScript} ]; then
 	source ${bashCompletionScript}
 fi
-source ${toolScript}
+
+if [ -e ${toolScript} ]; then
+	source ${toolScript}
+fi
 
 # Remove the colon as a completion separator because tcsh cannot handle it
 COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
