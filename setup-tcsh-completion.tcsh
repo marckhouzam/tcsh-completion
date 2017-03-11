@@ -69,7 +69,7 @@ foreach __command_name (`\ls /usr/share/bash-completion/completions/`)
 # Generate the new script
 # Must use the -i flag for this script to properly setup some environment functions
 # needed for completion scripts such as /usr/share/bash-completion/completions/apropos
-bash -i \${HOME}/git/tcsh-completion/setup-tcsh-completion.bash \`basename \$0\` > \$0
+bash -i \${HOME}/git/tcsh-completion/generate-completion-script.bash \`basename \$0\` > \$0
 
 EOF
 end
