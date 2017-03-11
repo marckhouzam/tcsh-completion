@@ -17,7 +17,7 @@
 
 if [ $# -ne 1 ]; then
 	echo "Usage: $0 <toolName>"
-	echo "where <toolName> "
+	echo "where <toolName> is the name of the tool we will generate a completion script for."
 	exit
 fi
 
@@ -42,7 +42,10 @@ complete -r
 # we must use the '-i' flag at the top of the file.
 source ${toolCompletionScript} &> /dev/null
 
-# Read each complete command generated as long as uses the -F format
+# Read the 'complete' command we generated as long as uses the -F format
+# and that it applies to the tool we care about.
+# There should be zero or one such commands, so using a loop is an easy
+# way to deal with the zero case.
 complete | egrep -e '-F' | egrep -e ${toolName}'$' | while read completionCommand
 do
 	# Remove everything up to the last space to find the command name
@@ -56,16 +59,18 @@ do
 	#  becomes
 	#      __git_wrap__gitk_main gitk
 	tmp=${completionCommand##*-F }
+
 	# Remove everyting after the first space
 	# e.g. __git_wrap__gitk_main gitk
 	#  becomes
-	#  __git_wrap__gitk_main
+	#      __git_wrap__gitk_main
+	#
 	# Note that we cannot simply use the output in $tmp to
 	# express both strings we are looking for as there could
 	# be other parameters included in $tmp
 	commandFunction=${tmp%% *}
 
-cat << EOF
+	cat << EOF
 #!bash
 #
 # This script is GENERATED and will be overwritten automatically.
