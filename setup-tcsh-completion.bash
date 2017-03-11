@@ -7,7 +7,7 @@
 # It will print the command name for which the script provides completions
 # followed by the corresponding bash function to be called from that script
 # to trigger completion.
-
+#
 # For example, 
 #   $0 /usr/share/bash-completion/completions/git
 # will output
@@ -44,10 +44,17 @@ source ${toolCompletionScript} &> /dev/null
 
 # Read the 'complete' command we generated as long as uses the -F format
 # and that it applies to the tool we care about.
-# There should be zero or one such commands, so using a loop is an easy
-# way to deal with the zero case.
-complete | egrep -e '-F' | egrep -e ${toolName}'$' | while read completionCommand
-do
+# There should be zero or one such commands.  If there are none
+# then we should remove the complete command for this tool.
+completionCommand=`complete | egrep -e '-F' | egrep -e ${toolName}'$'`
+
+if [ "${completionCommand}" == '' ]; then
+	>&2 echo ""
+	>&2 echo "Enhanced completion for ${toolName} has errors."
+	>&2 echo "Please remove its complete command."
+	>&2 echo "First type ^U then: "
+	>&2 echo " uncomplete ${toolName}"
+else
 	# Remove everything up to the last space to find the command name
 	# e.g. complete -o bashdefault -o default -o nospace -F __git_wrap__gitk_main gitk
 	#  becomes
@@ -83,4 +90,4 @@ bash \${HOME}/.tcsh-completion.bash ${commandFunction} ${toolCompletionScript} "
 
 EOF
 
-done
+fi
