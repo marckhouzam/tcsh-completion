@@ -45,15 +45,10 @@ endif
 unset __tcsh_version
 
 
-# Go over each bash completion script and generate a corresponding tcsh script
-# and 'complete' command.
+# Go over each bash completion script and generate a corresponding 'complete'
+# command and tcsh script for that 'complete' command.
 \mkdir -p ${__script_location}
-foreach __bash_script ( \
-    /usr/share/bash-completion/completions/* \
-# Don't include those more basic completions until the tcsh handling is more robust\
-#    /usr/share/bash-completion/bash_completion \
-  )
-  set __command_name = `basename ${__bash_script}`
+foreach __command_name (`\ls /usr/share/bash-completion/completions/`)
   set __tcsh_script = ${__script_location}/${__command_name}
 
   complete ${__command_name} p,\*,\`bash\ ${__tcsh_script}\ '"${COMMAND_LINE}"'\`,
@@ -75,7 +70,6 @@ bash \${HOME}/git/tcsh-completion/setup-tcsh-completion.bash \`basename \$0\` > 
 
 EOF
 end
-unset __bash_script
 unset __command_name
 unset __tcsh_script
-unset __tcsh_script_location
+unset __script_location
