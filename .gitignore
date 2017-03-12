@@ -1,3 +1,4 @@
 completions/
 *.swp
 npm-debug.log
+extra-scripts.txt

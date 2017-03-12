@@ -24,6 +24,7 @@
 #       It will tell tcsh to list the possible completion choices.
 
 root_path=$(cd `dirname $0` && pwd)
+extra_scripts="${root_path}/extra-scripts.txt"
 completion_file="${HOME}/.tcsh-completion.tcsh"
 
 # Check that tcsh is modern enough for completion
@@ -66,7 +67,7 @@ _generate_tcsh_complete_command ()
   source ${toolCompletionScript} &> /dev/null
 
   # Read each complete command generated as long as uses the -F format
-  complete | egrep -e '-F' | while read completionCommand
+  complete | \egrep -e '-F' | while read completionCommand
   do
     # Remove everything up to the last space to find the command name
     # e.g. complete -o bashdefault -o default -o nospace -F git_wrapgitk_main gitk
@@ -100,3 +101,23 @@ done
 
 # Don't include those more basic completions until the tcsh handling is more robust
 #  _generate_tcsh_complete_command /usr/share/bash-completion/bash_completion >> "${completion_file}"
+
+
+# Handle any extra scripts specified by the user.
+# First create the file if it is not there to help the user.
+if [ ! -e "${extra_scripts}" ]; then
+    echo "# You can add the full path, one per line, of any" >> "${extra_scripts}"
+    echo "# bash completions script that you want tcsh-completion to use." >> "${extra_scripts}"
+fi
+for script_path in `cat "${extra_scripts}" | \egrep -ve '^#|^\s*$' `; do
+  # Replace a path starting with ~<user>/ or ~/ with the home directory of the user
+  # If we don't, then the function won't find the script in question
+  script_path="${script_path/#\~*([^\/])/$HOME}"
+
+  _generate_tcsh_complete_command "${script_path}" >> "${completion_file}"
+done
+
+echo
+echo =\> If not added already, add a line to source ${completion_file} in your .tcshrc or .cshrc file.
+echo =\> Also note that you can add other completions scripts in the ${extra_scripts} file.
+echo
