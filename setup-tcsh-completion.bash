@@ -23,7 +23,7 @@
 #        set autolist=ambiguous
 #       It will tell tcsh to list the possible completion choices.
 
-root_path="`dirname $0`"
+root_path=$(cd `dirname $0` && pwd)
 setup_location="${root_path}/completions"
 completion_file="${setup_location}/tcsh-complete-commands.tcsh"
 
@@ -89,7 +89,7 @@ _generate_tcsh_complete_command ()
     # be other parameters included in $tmp
     commandFunction=${tmp%% *}
 
-    echo complete ${commandName} \'p,\*,\`bash\ ${HOME}/.tcsh-completion.bash\ ${commandFunction}\ ${toolCompletionScript}\ \"\$\{COMMAND_LINE\}\"\`,\'
+    echo complete ${commandName} \'p,\*,\`bash\ ${root_path}/tcsh-completion.bash\ ${commandFunction}\ ${toolCompletionScript}\ \"\$\{COMMAND_LINE\}\"\`,\'
   done
 }
 
