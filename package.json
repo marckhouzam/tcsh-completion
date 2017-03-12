@@ -4,13 +4,11 @@
   "version": "0.1.0",
   "author": "Marc Khouzam",
   "license": "MIT",
-  "repository": "https://github.com/marckhouzam/tcsh-completion.git",
+  "repository": "https://github.com/marckhouzam/tcsh-completion",
   "private": false,
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
-    "install": "\\rmdir node_modules",
-    "setup": "npm run clean ; ./setup-tcsh-completion.bash",
-    "clean": "\\rm -rf completions"
+    "install": "\\rm -rf node_modules; ./setup-tcsh-completion.bash"
   }
 }

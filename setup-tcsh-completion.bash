@@ -24,8 +24,7 @@
 #       It will tell tcsh to list the possible completion choices.
 
 root_path=$(cd `dirname $0` && pwd)
-setup_location="${root_path}/completions"
-completion_file="${setup_location}/tcsh-complete-commands.tcsh"
+completion_file="${HOME}/.tcsh-completion.tcsh"
 
 # Check that tcsh is modern enough for completion
 tcsh_version=(`tcsh --version | awk '{print $2}' | \sed 's/\./ /g'`)
@@ -93,8 +92,8 @@ _generate_tcsh_complete_command ()
   done
 }
 
+\rm -f "${completion_file}"
 # Go over each bash completion script and generate a corresponding 'complete' command
-\mkdir -p "${setup_location}"
 for script_path in /usr/share/bash-completion/completions/*; do
   _generate_tcsh_complete_command "${script_path}" >> "${completion_file}"
 done
