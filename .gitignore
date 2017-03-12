@@ -1,2 +1,3 @@
 completions/
 *.swp
+npm-debug.log
