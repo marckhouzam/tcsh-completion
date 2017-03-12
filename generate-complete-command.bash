@@ -39,6 +39,7 @@ complete -r
 # Note that for some of the scripts we may handle to properly be sourced,
 # we need to run the bash shell in interactive mode; this explains why
 # we must use the '-i' flag at the top of the file.
+# For example, this is necessary for the 'apropos' completion script
 source ${toolCompletionScript} &> /dev/null
 
 # Read each complete command generated as long as uses the -F format

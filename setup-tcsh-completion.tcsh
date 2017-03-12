@@ -31,28 +31,32 @@
 #     source <thisFile>
 # to your .tcshrc or .cshrc file
 
-set __tcsh_completion_version = `\echo ${tcsh} | \sed 's/\./ /g'`
-if ( ${__tcsh_completion_version[1]} < 6 || \
-     ( ${__tcsh_completion_version[1]} == 6 && \
-       ${__tcsh_completion_version[2]} < 16 ) ) then
-	unset __tcsh_completion_version
-	echo "tcsh-completion.tcsh: Your version of tcsh is too old, you need version 6.16.00 or newer.  Enhanced tcsh completion will not work."
-	exit
+set __root_path = "`basename $0`"
+set __setup_location = "${__root_path}/completions"
+set __completion_file = "${__setup_location}/tcsh-complete-commands.tcsh"
+
+# Check that tcsh is modern enough for completion
+set __tcsh_version = `\echo ${tcsh} | \sed 's/\./ /g'`
+if ( ${__tcsh_version[1]} < 6 || \
+     ( ${__tcsh_version[1]} == 6 && \
+       ${__tcsh_version[2]} < 16 ) ) then
+  unset __tcsh_version
+  echo "ERROR: Your version of tcsh is too old, you need version 6.16.00 or newer.  Enhanced tcsh completion will not work."
+  exit
 endif
-unset __tcsh_completion_version
+unset __tcsh_version
 
-set __tcsh_completion_file = /tmp/.tcsh_completion
-echo > ${__tcsh_completion_file}
 
-foreach __tcsh_completion_bash_script (/usr/share/bash-completion/completions/*)
-	./setup-tcsh-completion.bash ${__tcsh_completion_bash_script} >> ${__tcsh_completion_file}
+# Go over each bash completion script and generate a corresponding 'complete' command
+\mkdir -p "${__setup_location}"
+foreach __script_path (/usr/share/bash-completion/completions/*)
+  bash -i "${__root_path}/generate-complete-command.bash" "${__script_path}" >> "${__completion_file}"
 end
 
 # Don't include those more basic completions until the tcsh handling is more robust
-#./setup-tcsh-completion.bash /usr/share/bash-completion/bash_completion >> ${__tcsh_completion_file}
+#  bash -i "${__root_path}/setup-tcsh-completion.bash" /usr/share/bash-completion/bash_completion >> "${__completion_file}"
 
-source ${__tcsh_completion_file}
-\rm ${__tcsh_completion_file}
-unset __tcsh_completion_file
-
-unset __tcsh_completion_bash_script
+unset __completion_file
+unset __setup_location
+unset __script_path
+unset __root_path
