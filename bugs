@@ -1,0 +1,5 @@
+The following completions don't behave nicely compared to the bash completions:
+
+npm run <tab>
+git --<tab>
+
