@@ -109,6 +109,7 @@ if [ ! -e "${extra_scripts}" ]; then
     echo "# You can add the full path, one per line, of any" >> "${extra_scripts}"
     echo "# bash completions script that you want tcsh-completion to use." >> "${extra_scripts}"
 fi
+# Ignore lines starting with # and lines with only spaces in them
 for script_path in `cat "${extra_scripts}" | \egrep -ve '^#|^\s*$' `; do
   # Replace a path starting with ~<user>/ or ~/ with the home directory of the user
   # If we don't, then the function won't find the script in question
