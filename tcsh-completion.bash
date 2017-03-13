@@ -1,9 +1,21 @@
 #!bash
 #
 # Copyright (C) 2017 Marc Khouzam <marc.khouzam@gmail.com>
-# Distributed under the MIT License (MIT)
 #
-# Script to be called by the tcsh 'complete' command.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# This script is to be called by the tcsh 'complete' command.
 # It should be called by setting up a 'complete' command in the tcsh shell like this:
 #
 #  complete <toolName> 'p,*,`bash tcsh_completion.bash <completionFunction> <completionScript> "${COMMAND_LINE}"`,'
