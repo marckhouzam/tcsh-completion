@@ -3,37 +3,21 @@
 # Copyright (C) 2017 Marc Khouzam <marc.khouzam@gmail.com>
 # Distributed under the MIT License (MIT)
 #
-# When sourced, this script will generate a new script that uses
-# the git-completion.bash script provided by core Git.  This new
-# script can be used by tcsh to perform git completion.
-# The current script also issues the necessary tcsh 'complete'
-# commands.
+# When executed, this script will generate a file with all the
+# necessary tcsh complete commands to delegate completion
+# to the existing bash completions scripts.
 #
-# To use this completion script:
-#
-#    0) You need tcsh 6.16.00 or newer.
-#    1) Copy both this file and the bash completion script to ${HOME}.
-#       You _must_ use the name ${HOME}/.git-completion.bash for the
-#       bash script.
-#       (e.g. ~/.git-completion.tcsh and ~/.git-completion.bash).
-#    2) Add the following line to your .tcshrc/.cshrc:
-#        source ~/.git-completion.tcsh
-#    3) For completion similar to bash, it is recommended to also
-#       add the following line to your .tcshrc/.cshrc:
-#        set autolist=ambiguous
-#       It will tell tcsh to list the possible completion choices.
-
 root_path=$(cd `dirname $0` && pwd)
 extra_scripts="${root_path}/extra-scripts.txt"
 completion_file="${HOME}/.tcsh-completion.tcsh"
 
-# Check that tcsh is modern enough for completion
+# Check that tcsh is modern enough for completion.  We need version 6.16 or higher.
 tcsh_version=(`tcsh --version | awk '{print $2}' | \sed 's/\./ /g'`)
 if [[ ${tcsh_version[0]} -lt 6 || \
      ( ${tcsh_version[0]} -eq 6 && \
        ${tcsh_version[1]} -lt 16 ) ]]; then
   unset tcsh_version
-  echo "ERROR: Your version of tcsh is too old, you need version 6.16.00 or newer.  Enhanced tcsh completion will not work."
+  echo "ERROR: Your version of tcsh is too old, you need version 6.16.00 or newer.  Enhanced tcsh-completion will not work."
   exit
 fi
 

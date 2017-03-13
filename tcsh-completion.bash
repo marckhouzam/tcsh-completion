@@ -3,8 +3,8 @@
 # Copyright (C) 2017 Marc Khouzam <marc.khouzam@gmail.com>
 # Distributed under the MIT License (MIT)
 #
-# Script to be called by the tcsh complete command.
-# It should be called by setting up a complete command in the tcsh shell like this:
+# Script to be called by the tcsh 'complete' command.
+# It should be called by setting up a 'complete' command in the tcsh shell like this:
 #
 #  complete <toolName> 'p,*,`bash tcsh_completion.bash <completionFunction> <completionScript> "${COMMAND_LINE}"`,'
 #  e.g.
