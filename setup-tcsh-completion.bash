@@ -20,7 +20,22 @@
 # necessary tcsh complete commands to delegate completion
 # to the existing bash completions scripts.
 #
+
+debug=0
+if [[ "$1" == "-d" ]]; then
+  debug=1
+  shift
+fi
+
 root_path=$(cd `dirname $0` && pwd)
+
+completion_scripts_path="/usr/share/bash-completion/completions"
+bash_completion_script="/usr/share/bash-completion/bash_completion"
+if [[ $(uname) == "Darwin" ]]; then
+  completion_scripts_path="/usr/local/etc/bash_completion.d"
+  bash_completion_script="/usr/local/etc/bash_completion"
+fi
+
 extra_scripts="${root_path}/extra-scripts.txt"
 completion_file="${HOME}/.tcsh-completion.tcsh"
 
@@ -48,7 +63,7 @@ _generate_tcsh_complete_command ()
   # to generate the 'complete' commands we are interested in.
   # So let's avoid to source it to save time
   #
-  #bashCompletionScript=/usr/share/bash-completion/bash_completion
+  #bashCompletionScript=${bash_completion_script}
   #if [ -e ${bashCompletionScript} ]; then
   #  source ${bashCompletionScript}
   #fi
@@ -61,7 +76,11 @@ _generate_tcsh_complete_command ()
   # we need to run the bash shell in interactive mode; this explains why
   # we must use the '-i' flag at the top of the file.
   # For example, this is necessary for the 'apropos' completion script
-  source ${toolCompletionScript} &> /dev/null
+  if [[ $debug -eq 1 ]]; then
+    source ${toolCompletionScript}
+  else
+    source ${toolCompletionScript} &> /dev/null
+  fi
 
   # Read each complete command generated as long as uses the -F format
   complete | \egrep -e '-F' | while read completionCommand
@@ -92,12 +111,12 @@ _generate_tcsh_complete_command ()
 
 \rm -f "${completion_file}"
 # Go over each bash completion script and generate a corresponding 'complete' command
-for script_path in /usr/share/bash-completion/completions/*; do
+for script_path in ${completion_scripts_path}/*; do
   _generate_tcsh_complete_command "${script_path}" >> "${completion_file}"
 done
 
 # Don't include those more basic completions until the tcsh handling is more robust
-#  _generate_tcsh_complete_command /usr/share/bash-completion/bash_completion >> "${completion_file}"
+#  _generate_tcsh_complete_command ${bash_completion_script} >> "${completion_file}"
 
 
 # Handle any extra scripts specified by the user.
