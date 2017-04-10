@@ -21,10 +21,10 @@
 # to the existing bash completions scripts.
 #
 
-debug=0
-if [[ "$1" == "-d" ]]; then
-  debug=1
-  shift
+# Allow for debug printouts when running the script by hand
+if [ "$1" == "-d" ] || [ "$1" == "--debug" ]; then
+    debug=true
+    shift
 fi
 
 root_path=$(cd `dirname $0` && pwd)
@@ -76,7 +76,7 @@ _generate_tcsh_complete_command ()
   # we need to run the bash shell in interactive mode; this explains why
   # we must use the '-i' flag at the top of the file.
   # For example, this is necessary for the 'apropos' completion script
-  if [[ $debug -eq 1 ]]; then
+  if [ "${debug}" == "true" ]; then
     source ${toolCompletionScript}
   else
     source ${toolCompletionScript} &> /dev/null
