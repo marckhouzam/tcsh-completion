@@ -25,6 +25,10 @@
 # Base bash completion script which provides some functions
 # that other completions script sometimes use
 bashCompletionScript=/usr/share/bash-completion/bash_completion
+if [[ $(uname) == "Darwin" ]]; then
+  bashCompletionScript=/usr/local/etc/bash_completion
+  bashCompletionScript=~/bash_completion
+fi
 
 # Allow for debug printouts when running the script by hand
 if [ "$1" == "-d" ] || [ "$1" == "--debug" ]; then
@@ -42,7 +46,7 @@ if [ "${debug}" == "true" ]; then
     echo with command to complete: $commandToComplete
 fi
 
-# I've seen that source this and doing completion with git
+# I've seen that sourcing this and doing completion with git
 # will generate many more invalid completions than without sourcing
 # this file.  But those invalid completions are discarded by the
 # shell, so I haven't yet found a problem.

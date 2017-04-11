@@ -21,6 +21,21 @@ and will provide a list of all available branches to checkout.
 
 You must be using **tcsh** as your shell.
 
+### On Linux
+
+**tcsh-completion** uses the existing bash completion scripts available on the system.
+As long as these scripts are already available at */usr/share/bash-completion/bash_completion*,
+you can jump directly to the section below.  The scripts should be present at least on an Ubuntu
+system.  If they are not present, you must install them there somehow.
+
+### On Mac
+
+**tcsh-completion** uses the existing bash completion scripts available on the system.
+These scripts are not installed by default.  To install them using Homebrew you can do:
+```
+brew install bash-completion
+```
+
 ### To try it in the current shell
 With npm (although this is not a node or Javascript project):
 ```
