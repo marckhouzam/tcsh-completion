@@ -59,6 +59,10 @@ to source the generated *${HOME}/.tcsh-completion.tcsh* file.
 
 You should then be able to perform completion of sub-commands for many of your favorite tools.
 
+Should you need to refresh the set of completions, for example after installing a new tool,
+you can run the alias **completion-refresh**.  Note that this will only refresh the completion
+list on the shell where you ran the alias.
+
 ## Details
 
 **tcsh-completion** setups a tcsh *complete* command for each available bash completion script, and delegates to the bash script to actually perform the completion; it then redirects the result to tcsh.

@@ -28,6 +28,8 @@ if [ "$1" == "-d" ] || [ "$1" == "--debug" ]; then
 fi
 
 root_path=$(cd `dirname $0` && pwd)
+setup_script=${root_path}/`basename $0`
+alias=completion-refresh
 
 completion_scripts_path="/usr/share/bash-completion/completions"
 bash_completion_script="/usr/share/bash-completion/bash_completion"
@@ -134,7 +136,15 @@ for script_path in `cat "${extra_scripts}" | \egrep -ve '^#|^\s*$' `; do
   _generate_tcsh_complete_command "${script_path}" >> "${completion_file}"
 done
 
+# Add an alias to allow the user to easily refresh the completion script.
+# This alias will be used when the user installs a new tool and wants to
+# setup its completion
+echo "alias ${alias} ${setup_script}" >> "${completion_file}"
+
 echo
-echo =\> If not added already, add a line to source ${completion_file} in your .tcshrc or .cshrc file.
-echo =\> Also note that you can add other completions scripts in the ${extra_scripts} file.
+echo =\> If not added already, add a line to source ${completion_file}
+echo =\> in your .tcshrc or .cshrc file. Also note that you can add other completions scripts in
+echo =\> the ${extra_scripts} file.
+echo =\>
+echo =\> After installing a new tool, you can refresh the completions using the alias ${alias}
 echo
