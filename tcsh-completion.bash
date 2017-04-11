@@ -27,7 +27,6 @@
 bashCompletionScript=/usr/share/bash-completion/bash_completion
 if [[ $(uname) == "Darwin" ]]; then
   bashCompletionScript=/usr/local/etc/bash_completion
-  bashCompletionScript=~/bash_completion
 fi
 
 # Allow for debug printouts when running the script by hand
