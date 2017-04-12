@@ -57,18 +57,29 @@ if [ -e ${completionScript} ]; then
 	source ${completionScript}
 fi
 
+# Set the bash completion variables
+#
+COMP_LINE=${commandToComplete}
+#
+# TODO: set the below in case the cursor is in the middle of the line
+COMP_POINT=${#COMP_LINE}
+#
+# TODO: Set to an integer value corresponding to the type of completion
+# attempted that caused a completion function to be called:
+#   9 (TAB) for normal completion,
+#   63 ('?') for listing completions after successive tabs,
+#   33 ('!') for listing alternatives on partial word completion,
+#   64 ('@') to list completions if the word is not unmodified,
+#   37 ('%') for menu completion.
+COMP_TYPE=9
+#
+# TODO: The key (or final key of a key sequence) used to invoke the current completion function.
+# Could be 9 for TAB but could also be 27 for Esc or maybe something else I didn't think of.
+COMP_KEY=9
+#
 # Remove the colon as a completion separator because tcsh cannot handle it
 COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
-
-## For file completion, tcsh needs the '/' to be appended to directories.
-## By default, the bash script does not do that.
-## We can achieve this by using the below compatibility
-## method of the git-completion.bash script.
-#__index_file_list_filter ()
-#{
-#	__index_file_list_filter_compat
-#}
-
+#
 # Set COMP_WORDS in a way that can be handled by the bash script.
 COMP_WORDS=(${commandToComplete})
 
