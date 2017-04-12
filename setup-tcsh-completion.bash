@@ -64,10 +64,8 @@ _generate_tcsh_complete_command ()
   # It does not look like the main bash completion script is necessary
   # to generate the 'complete' commands we are interested in.
   # So let's avoid to source it to save time
-  #
-  #bashCompletionScript=${bash_completion_script}
-  #if [ -e ${bashCompletionScript} ]; then
-  #  source ${bashCompletionScript}
+  #if [ -e ${bash_completion_script} ]; then
+  #  source ${bash_completion_script}
   #fi
 
   # Remove any existing complete commands
