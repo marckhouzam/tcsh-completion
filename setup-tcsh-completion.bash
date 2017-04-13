@@ -51,6 +51,16 @@ if [[ ${tcsh_version[0]} -lt 6 || \
   exit
 fi
 
+# Some scripts use this method which is included in ${bash_completion_script}.
+# However, that method gets unset at the end of the ${bash_completion_script}.
+# So we define it ourselves here.  Note that _have() is also defined in
+# ${bash_completion_script} but does not get unset.
+have()
+{
+    unset -v have
+    _have $1 && have=yes
+}
+
 # Echo the tcsh 'complete' command corresponding
 # to the script passed as a parameter.
 # Parameters:
