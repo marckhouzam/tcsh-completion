@@ -55,11 +55,24 @@ fi
 # However, that method gets unset at the end of the ${bash_completion_script}.
 # So we define it ourselves here.  Note that _have() is also defined in
 # ${bash_completion_script} but does not get unset.
-have()
-{
-    unset -v have
-    _have $1 && have=yes
-}
+if [[ $(uname) == "Darwin" ]]; then
+  # This function checks whether we have a given program on the system.
+  # No need for bulky functions in memory if we don't.
+  have()
+  {
+      unset -v have
+      # Completions for system administrator commands are installed as well in
+      # case completion is attempted via `sudo command ...'.
+      PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin type $1 &>/dev/null &&
+      have="yes"
+  }
+else
+  have()
+  {
+      unset -v have
+      _have $1 && have=yes
+  }
+fi
 
 # Echo the tcsh 'complete' command corresponding
 # to the script passed as a parameter.
