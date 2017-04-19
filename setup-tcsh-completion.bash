@@ -163,9 +163,14 @@ done
 echo "alias ${alias} '${setup_script} && source ${completion_file}'" >> "${completion_file}"
 
 echo
+echo =\> 1.
 echo =\> If not added already, add a line to source ${completion_file}
 echo =\> in your .tcshrc or .cshrc file. Also note that you can add other completions scripts in
 echo =\> the ${extra_scripts} file.
 echo =\>
+echo =\> 2.
 echo =\> After installing a new tool, you can refresh the completions using the alias ${alias}
+echo =\>
+echo =\> 3.
+echo =\> NOTE: For completions to work in the current shell you must source ${completion_file}
 echo
