@@ -160,7 +160,7 @@ done
 # Add an alias to allow the user to easily refresh the completion script.
 # This alias will be used when the user installs a new tool and wants to
 # setup its completion
-echo "alias ${alias} ${setup_script}" >> "${completion_file}"
+echo "alias ${alias} '${setup_script} && source ${completion_file}'" >> "${completion_file}"
 
 echo
 echo =\> If not added already, add a line to source ${completion_file}
