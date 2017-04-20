@@ -29,6 +29,7 @@ fi
 
 root_path=$(cd `dirname $0` && pwd)
 setup_script=${root_path}/`basename $0`
+common_functions="${root_path}/common-functions.bash"
 alias=completion-refresh
 
 completion_scripts_path="/usr/share/bash-completion/completions"
@@ -51,29 +52,6 @@ if [[ ${tcsh_version[0]} -lt 6 || \
   exit
 fi
 
-# Some scripts use this method which is included in ${bash_completion_script}.
-# However, that method gets unset at the end of the ${bash_completion_script}.
-# So we define it ourselves here.  Note that _have() is also defined in
-# ${bash_completion_script} but does not get unset.
-if [[ $(uname) == "Darwin" ]]; then
-  # This function checks whether we have a given program on the system.
-  # No need for bulky functions in memory if we don't.
-  have()
-  {
-      unset -v have
-      # Completions for system administrator commands are installed as well in
-      # case completion is attempted via `sudo command ...'.
-      PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin type $1 &>/dev/null &&
-      have="yes"
-  }
-else
-  have()
-  {
-      unset -v have
-      _have $1 && have=yes
-  }
-fi
-
 # Echo the tcsh 'complete' command corresponding
 # to the script passed as a parameter.
 # Parameters:
@@ -83,13 +61,6 @@ fi
 _generate_tcsh_complete_command ()
 {
   toolCompletionScript=$1
-
-  # It does not look like the main bash completion script is necessary
-  # to generate the 'complete' commands we are interested in.
-  # So let's avoid to source it to save time
-  #if [ -e ${bash_completion_script} ]; then
-  #  source ${bash_completion_script}
-  #fi
 
   # Remove any existing complete commands
   complete -r
@@ -131,6 +102,10 @@ _generate_tcsh_complete_command ()
     echo complete ${commandName} \'p,\*,\`bash\ ${root_path}/tcsh-completion.bash\ ${commandFunction}\ ${toolCompletionScript}\ \"\$\{COMMAND_LINE\}\"\`,\'
   done
 }
+
+if [ -e ${common_functions} ]; then
+	source ${common_functions}
+fi
 
 \rm -f "${completion_file}"
 # Go over each bash completion script and generate a corresponding 'complete' command
