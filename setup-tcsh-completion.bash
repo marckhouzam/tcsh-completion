@@ -84,6 +84,11 @@ _generate_tcsh_complete_command ()
     #  becomes
     #      gitk
     commandName=${completionCommand##* }
+    # Check if this command is one that can be sped up
+    speedUp="-s"
+    if [[ `grep ${commandName} ./speed.txt` != "" ]]; then
+      speedUp="-S"
+    fi
 
     # Remove everything up to and including "-F "
     # e.g. complete -o bashdefault -o default -o nospace -F git_wrapgitk_main gitk
@@ -99,7 +104,7 @@ _generate_tcsh_complete_command ()
     # be other parameters included in $tmp
     commandFunction=${tmp%% *}
 
-    echo complete ${commandName} \'p,\*,\`bash\ ${root_path}/tcsh-completion.bash\ ${commandFunction}\ ${toolCompletionScript}\ \"\$\{COMMAND_LINE\}\"\`,\'
+    echo complete ${commandName} \'p,\*,\`bash\ ${root_path}/tcsh-completion.bash\ ${speedUp}\ ${commandFunction}\ ${toolCompletionScript}\ \"\$\{COMMAND_LINE\}\"\`,\'
   done
 }
 

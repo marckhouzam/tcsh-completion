@@ -31,9 +31,10 @@ if [ "$1" == "-d" ] || [ "$1" == "--debug" ]; then
     shift
 fi
 
-completionFunction=$1
-completionScript=$2
-commandToComplete=$3
+skipCommon=$1
+completionFunction=$2
+completionScript=$3
+commandToComplete=$4
 
 if [ "${debug}" == "true" ]; then
     echo =====================================
@@ -41,10 +42,9 @@ if [ "${debug}" == "true" ]; then
     echo with command to complete: $commandToComplete
 fi
 
-if [ -e ${common_functions} ]; then
+if [ ${skipCommon} != "-S" -a -e ${common_functions} ]; then
 	source ${common_functions}
 fi
-
 if [ -e ${completionScript} ]; then
 	source ${completionScript}
 fi
